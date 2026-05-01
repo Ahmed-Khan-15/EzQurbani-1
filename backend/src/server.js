@@ -6,6 +6,7 @@ import authRoutes from './routes/auth.js';
 import animalRoutes from './routes/animals.js';
 import bookingRoutes from './routes/bookings.js';
 import paymentRoutes from './routes/payments.js';
+import adminRoutes from './routes/admin.js';
 import errorHandler from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -31,6 +32,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/animals', animalRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
