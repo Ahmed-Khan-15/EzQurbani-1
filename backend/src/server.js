@@ -5,6 +5,7 @@ import pool from './config/db.js';
 import authRoutes from './routes/auth.js';
 import animalRoutes from './routes/animals.js';
 import bookingRoutes from './routes/bookings.js';
+import paymentRoutes from './routes/payments.js';
 import errorHandler from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -29,6 +30,7 @@ pool.query('SELECT NOW()', (err, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/animals', animalRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
