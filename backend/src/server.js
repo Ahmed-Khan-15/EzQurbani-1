@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import pool from './config/db.js';
 import authRoutes from './routes/auth.js';
+import animalRoutes from './routes/animals.js';
 import errorHandler from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -25,6 +26,7 @@ pool.query('SELECT NOW()', (err, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/animals', animalRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {
