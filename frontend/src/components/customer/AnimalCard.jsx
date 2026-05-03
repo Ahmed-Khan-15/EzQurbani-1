@@ -3,15 +3,23 @@ import StatusBadge from '../common/StatusBadge';
 import { Weight, DollarSign, Tag } from 'lucide-react';
 
 const AnimalCard = ({ animal, onBookFull, onViewHissas }) => {
+    const getAnimalEmoji = (category) => {
+        const map = {
+            'bakra': '🐐',
+            'cow': '🐄',
+            'dumba': '🐏',
+            'camel': '🐪'
+        };
+        return map[category?.toLowerCase()] || '🐾';
+    };
+
     return (
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow group">
             {/* Image Placeholder */}
-            <div className="h-48 bg-gray-100 flex items-center justify-center relative overflow-hidden">
-                <img 
-                    src={`https://api.dicebear.com/9.x/icons/svg?seed=${animal.category_name}&backgroundColor=f3f4f6`}
-                    alt={animal.category_name}
-                    className="w-24 h-24 group-hover:scale-110 transition-transform duration-500"
-                />
+            <div className="h-48 bg-[#fdf6e8] flex items-center justify-center relative overflow-hidden">
+                <span className="text-7xl group-hover:scale-110 transition-transform duration-500 drop-shadow-md">
+                    {getAnimalEmoji(animal.category_name)}
+                </span>
                 <div className="absolute top-4 right-4">
                     <StatusBadge status={animal.status} />
                 </div>

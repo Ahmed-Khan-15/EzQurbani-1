@@ -113,11 +113,11 @@ const MyReceipts = () => {
                         </div>
                     </div>
 
-                    <div className="mt-12 flex gap-4">
-                        <button className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white font-bold rounded-xl hover:bg-black transition-colors">
+                    <div className="mt-12 flex gap-4 print:hidden">
+                        <button onClick={() => window.print()} className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white font-bold rounded-xl hover:bg-black transition-colors">
                             <Download className="w-4 h-4" /> Download PDF
                         </button>
-                        <button className="px-6 py-3 border-2 border-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-50 transition-colors">
+                        <button onClick={() => window.print()} className="px-6 py-3 border-2 border-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-50 transition-colors">
                             <Printer className="w-4 h-4" />
                         </button>
                     </div>

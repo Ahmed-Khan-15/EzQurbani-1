@@ -9,6 +9,7 @@ import {
     GET_RECEIPT_BY_BOOKING,
     GET_ALL_METHODS
 } from '../queries/paymentQueries.js';
+import { UPDATE_BOOKING_STATUS } from '../queries/bookingQueries.js';
 
 // Get all payment methods
 export const getPaymentMethods = async (req, res) => {
@@ -48,6 +49,9 @@ export const makePayment = async (req, res) => {
         const receiptNo = `RCP-${Date.now()}`;
         const receiptResult = await client.query(INSERT_RECEIPT, [newPayment.payment_id, receiptNo]);
         const newReceipt = receiptResult.rows[0];
+
+        // 4. Update Booking Status to Confirmed
+        await client.query(UPDATE_BOOKING_STATUS, ['confirmed', booking_id]);
 
         await client.query('COMMIT');
 
