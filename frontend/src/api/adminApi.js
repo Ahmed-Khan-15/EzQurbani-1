@@ -1,0 +1,31 @@
+import axiosInstance from './axiosInstance';
+
+export const getDashboardStats = async () => {
+    const response = await axiosInstance.get('/admin/dashboard');
+    return response.data;
+};
+
+export const getAllUsers = async () => {
+    const response = await axiosInstance.get('/admin/users');
+    return response.data;
+};
+
+export const getAllHouses = async () => {
+    const response = await axiosInstance.get('/admin/houses');
+    return response.data;
+};
+
+export const getAllButchers = async () => {
+    const response = await axiosInstance.get('/admin/butchers');
+    return response.data;
+};
+
+export const createSchedule = async (scheduleData) => {
+    const response = await axiosInstance.post('/admin/schedules', scheduleData);
+    return response.data;
+};
+
+export const getAllSchedules = async () => {
+    const response = await axiosInstance.get('/admin/schedules');
+    return response.data;
+};
