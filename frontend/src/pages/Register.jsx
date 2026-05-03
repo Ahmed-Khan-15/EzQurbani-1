@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 import { register as registerApi } from '../api/authApi';
-import { UserPlus, Mail, Lock, Phone, User, AlertCircle } from 'lucide-react';
+import { Mail, Lock, Phone, User, AlertCircle } from 'lucide-react';
 
 const Register = () => {
     const [formData, setFormData] = useState({
@@ -40,84 +40,139 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4 py-12">
-            <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 border border-gray-100">
-                <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-full mb-4">
-                        <UserPlus className="w-8 h-8 text-blue-600" />
+        <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden', backgroundColor: '#fdf6e8', fontFamily: "'Nunito', sans-serif", padding: '2rem 0' }}>
+            {/* Geo Background Pattern */}
+            <div 
+                style={{
+                    position: 'absolute', inset: 0, pointerEvents: 'none', opacity: 0.4,
+                    backgroundImage: `
+                        repeating-linear-gradient(60deg, rgba(201,168,76,0.04) 0px, rgba(201,168,76,0.04) 1px, transparent 1px, transparent 40px),
+                        repeating-linear-gradient(-60deg, rgba(201,168,76,0.04) 0px, rgba(201,168,76,0.04) 1px, transparent 1px, transparent 40px),
+                        repeating-linear-gradient(0deg, rgba(201,168,76,0.03) 0px, rgba(201,168,76,0.03) 1px, transparent 1px, transparent 40px)
+                    `
+                }}
+            />
+            
+            {/* Glow effect */}
+            <div style={{ position: 'absolute', top: '-10%', right: '-10%', width: '600px', height: '600px', background: 'radial-gradient(circle,rgba(201,168,76,0.08) 0%,transparent 65%)', pointerEvents: 'none' }} />
+
+            {/* Main Card Container */}
+            <div style={{ 
+                maxWidth: '460px', width: '100%', margin: '0 1rem', padding: '3rem 2.5rem',
+                backgroundColor: '#ffffff', borderRadius: '24px', position: 'relative', zIndex: 10,
+                border: '1px solid rgba(201,168,76,0.2)', boxShadow: '0 24px 56px rgba(0,0,0,0.08)',
+                boxSizing: 'border-box'
+            }}>
+                
+                {/* Back to Home */}
+                <div style={{ position: 'absolute', top: '1.5rem', left: '1.5rem' }}>
+                    <Link to="/" style={{ color: '#7a7060', textDecoration: 'none', fontSize: '0.85rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '4px' }} onMouseOver={(e) => e.target.style.color = '#c9a84c'} onMouseOut={(e) => e.target.style.color = '#7a7060'}>
+                        ← Home
+                    </Link>
+                </div>
+
+                <div style={{ textAlign: 'center', marginBottom: '2rem', marginTop: '1rem' }}>
+                    <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: '4rem', height: '4rem', borderRadius: '50%', marginBottom: '1rem', border: '1px solid rgba(201,168,76,0.3)', backgroundColor: '#fdf6e8' }}>
+                        <span style={{ color: '#1a4a35', fontSize: '1.8rem', fontFamily: "'Cormorant Garamond', serif" }}>☽</span>
                     </div>
-                    <h1 className="text-3xl font-bold text-gray-900">Create Account</h1>
-                    <p className="text-gray-500 mt-2">Join EzQurbani today</p>
+                    <h1 style={{ fontSize: '2.4rem', fontWeight: 700, color: '#1a4a35', lineHeight: 1.1, fontFamily: "'Cormorant Garamond', serif", margin: 0 }}>
+                        Create <span style={{ fontStyle: 'italic', color: '#c9a84c' }}>Account</span>
+                    </h1>
+                    <p style={{ color: '#7a7060', marginTop: '0.5rem', fontSize: '0.95rem' }}>Join EzQurbani today</p>
                 </div>
 
                 {error && (
-                    <div className="mb-6 p-4 bg-red-50 border-l-4 border-red-500 rounded flex items-center gap-3 text-red-700">
-                        <AlertCircle className="w-5 h-5 flex-shrink-0" />
-                        <p className="text-sm">{error}</p>
+                    <div style={{ marginBottom: '1.5rem', padding: '1rem', borderRadius: '8px', backgroundColor: 'rgba(230, 59, 59, 0.08)', borderLeft: '4px solid #e63b3b', color: '#b91c1c', display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
+                        <AlertCircle style={{ width: '1.25rem', height: '1.25rem', flexShrink: 0, marginTop: '0.125rem' }} />
+                        <p style={{ fontSize: '0.875rem', margin: 0 }}>{error}</p>
                     </div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-4">
+                <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Full Name</label>
-                        <div className="relative">
-                            <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#3d3928', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Full Name</label>
+                        <div style={{ position: 'relative' }}>
+                            <User style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', width: '1.1rem', height: '1.1rem', color: '#c9a84c' }} />
                             <input
                                 type="text"
                                 name="name"
                                 required
                                 value={formData.name}
                                 onChange={handleChange}
-                                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                                 placeholder="John Doe"
+                                style={{ 
+                                    width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', boxSizing: 'border-box',
+                                    backgroundColor: '#fdf6e8', border: '1px solid rgba(201,168,76,0.3)', borderRadius: '12px',
+                                    color: '#1a1a18', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem'
+                                }}
+                                onFocus={(e) => e.target.style.borderColor = '#1a4a35'}
+                                onBlur={(e) => e.target.style.borderColor = 'rgba(201,168,76,0.3)'}
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Email Address</label>
-                        <div className="relative">
-                            <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#3d3928', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Email Address</label>
+                        <div style={{ position: 'relative' }}>
+                            <Mail style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', width: '1.1rem', height: '1.1rem', color: '#c9a84c' }} />
                             <input
                                 type="email"
                                 name="email"
                                 required
                                 value={formData.email}
                                 onChange={handleChange}
-                                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                                 placeholder="name@example.com"
+                                style={{ 
+                                    width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', boxSizing: 'border-box',
+                                    backgroundColor: '#fdf6e8', border: '1px solid rgba(201,168,76,0.3)', borderRadius: '12px',
+                                    color: '#1a1a18', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem'
+                                }}
+                                onFocus={(e) => e.target.style.borderColor = '#1a4a35'}
+                                onBlur={(e) => e.target.style.borderColor = 'rgba(201,168,76,0.3)'}
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Phone Number</label>
-                        <div className="relative">
-                            <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#3d3928', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Phone Number</label>
+                        <div style={{ position: 'relative' }}>
+                            <Phone style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', width: '1.1rem', height: '1.1rem', color: '#c9a84c' }} />
                             <input
                                 type="text"
                                 name="phone"
                                 required
                                 value={formData.phone}
                                 onChange={handleChange}
-                                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                                 placeholder="0300-1234567"
+                                style={{ 
+                                    width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', boxSizing: 'border-box',
+                                    backgroundColor: '#fdf6e8', border: '1px solid rgba(201,168,76,0.3)', borderRadius: '12px',
+                                    color: '#1a1a18', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem'
+                                }}
+                                onFocus={(e) => e.target.style.borderColor = '#1a4a35'}
+                                onBlur={(e) => e.target.style.borderColor = 'rgba(201,168,76,0.3)'}
                             />
                         </div>
                     </div>
 
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1.5">Password</label>
-                        <div className="relative">
-                            <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                        <label style={{ display: 'block', fontSize: '0.75rem', fontWeight: 700, color: '#3d3928', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '0.08em' }}>Password</label>
+                        <div style={{ position: 'relative' }}>
+                            <Lock style={{ position: 'absolute', left: '1rem', top: '50%', transform: 'translateY(-50%)', width: '1.1rem', height: '1.1rem', color: '#c9a84c' }} />
                             <input
                                 type="password"
                                 name="password"
                                 required
                                 value={formData.password}
                                 onChange={handleChange}
-                                className="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                                 placeholder="••••••••"
+                                style={{ 
+                                    width: '100%', padding: '0.85rem 1rem 0.85rem 2.8rem', boxSizing: 'border-box',
+                                    backgroundColor: '#fdf6e8', border: '1px solid rgba(201,168,76,0.3)', borderRadius: '12px',
+                                    color: '#1a1a18', outline: 'none', transition: 'border-color 0.2s', fontSize: '0.95rem'
+                                }}
+                                onFocus={(e) => e.target.style.borderColor = '#1a4a35'}
+                                onBlur={(e) => e.target.style.borderColor = 'rgba(201,168,76,0.3)'}
                             />
                         </div>
                     </div>
@@ -125,15 +180,24 @@ const Register = () => {
                     <button
                         type="submit"
                         disabled={isLoading}
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-lg shadow-blue-200 transition-all active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
+                        style={{ 
+                            width: '100%', padding: '0.9rem', marginTop: '0.5rem', borderRadius: '12px',
+                            backgroundColor: '#c9a84c', color: '#1a4a35', fontWeight: 700, fontSize: '1rem',
+                            border: 'none', cursor: isLoading ? 'not-allowed' : 'pointer', opacity: isLoading ? 0.7 : 1,
+                            boxShadow: '0 8px 24px rgba(201,168,76,0.3)', transition: 'background-color 0.2s, transform 0.2s'
+                        }}
+                        onMouseOver={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#e8c87a')}
+                        onMouseOut={(e) => !isLoading && (e.currentTarget.style.backgroundColor = '#c9a84c')}
+                        onMouseDown={(e) => !isLoading && (e.currentTarget.style.transform = 'scale(0.98)')}
+                        onMouseUp={(e) => !isLoading && (e.currentTarget.style.transform = 'scale(1)')}
                     >
                         {isLoading ? 'Creating Account...' : 'Create Account'}
                     </button>
                 </form>
 
-                <div className="mt-8 text-center text-sm text-gray-600">
+                <div style={{ marginTop: '2rem', textAlign: 'center', fontSize: '0.9rem', color: '#7a7060' }}>
                     Already have an account?{' '}
-                    <Link to="/login" className="text-blue-600 font-semibold hover:underline">
+                    <Link to="/login" style={{ color: '#1a4a35', fontWeight: 700, textDecoration: 'none', transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#c9a84c'} onMouseOut={(e) => e.target.style.color = '#1a4a35'}>
                         Sign in instead
                     </Link>
                 </div>
