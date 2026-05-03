@@ -44,28 +44,29 @@ const BookConfirm = () => {
                 <ArrowLeft className="w-4 h-4" /> Back to Browse
             </button>
 
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-                <div className="bg-green-600 p-8 text-white">
-                    <h2 className="text-2xl font-bold">Booking Confirmation</h2>
-                    <p className="opacity-90">Please review your sacrificial selection details.</p>
+            <div className="bg-white rounded-3xl shadow-xl border border-ez-gold/20 overflow-hidden">
+                <div className="bg-ez-emerald p-8 text-ez-cream relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-ez-gold/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+                    <h2 className="text-3xl font-bold font-serif text-ez-gold">Booking Confirmation</h2>
+                    <p className="opacity-90 mt-1 italic">Please review your sacrificial selection details.</p>
                 </div>
 
-                <div className="p-8 space-y-6">
-                    <div className="flex justify-between items-center py-4 border-b border-gray-50">
-                        <span className="text-gray-500 font-medium">Sacrifice Type</span>
-                        <span className="text-gray-900 font-bold capitalize">{animal.category_name}</span>
+                <div className="p-8 space-y-6 bg-ez-cream/30">
+                    <div className="flex justify-between items-center py-4 border-b border-ez-gold/20">
+                        <span className="text-gray-500 font-bold uppercase tracking-widest text-xs font-serif">Sacrifice Type</span>
+                        <span className="text-ez-emerald font-bold capitalize text-lg">{animal.category_name}</span>
                     </div>
-                    <div className="flex justify-between items-center py-4 border-b border-gray-50">
-                        <span className="text-gray-500 font-medium">Booking Option</span>
-                        <span className="text-gray-900 font-bold capitalize">{type === 'hissa' ? `Hissa Slot #${hissa.hissa_no}` : 'Full Animal'}</span>
+                    <div className="flex justify-between items-center py-4 border-b border-ez-gold/20">
+                        <span className="text-gray-500 font-bold uppercase tracking-widest text-xs font-serif">Booking Option</span>
+                        <span className="text-ez-emerald font-bold capitalize text-lg">{type === 'hissa' ? `Hissa Slot #${hissa.hissa_no}` : 'Full Animal'}</span>
                     </div>
-                    <div className="flex justify-between items-center py-4 border-b border-gray-50">
-                        <span className="text-gray-500 font-medium">Tag Number</span>
-                        <span className="text-gray-900 font-bold">{animal.tag_no}</span>
+                    <div className="flex justify-between items-center py-4 border-b border-ez-gold/20">
+                        <span className="text-gray-500 font-bold uppercase tracking-widest text-xs font-serif">Tag Number</span>
+                        <span className="text-ez-emerald font-bold text-lg">{animal.tag_no}</span>
                     </div>
-                    <div className="flex justify-between items-center py-6">
-                        <span className="text-xl font-bold text-gray-900">Total Price</span>
-                        <span className="text-3xl font-extrabold text-green-600">Rs. {price.toLocaleString()}</span>
+                    <div className="flex justify-between items-center py-6 bg-white rounded-xl px-6 border border-ez-gold/30 mt-4">
+                        <span className="text-xl font-bold text-ez-emerald font-serif">Total Price</span>
+                        <span className="text-3xl font-black text-ez-emerald">Rs. {price.toLocaleString()}</span>
                     </div>
 
                     {error && (
@@ -79,7 +80,7 @@ const BookConfirm = () => {
                         <button
                             onClick={handleConfirm}
                             disabled={isLoading}
-                            className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl shadow-lg shadow-green-100 transition-all active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-2"
+                            className="w-full bg-ez-gold hover:bg-ez-gold-light text-ez-emerald font-black py-4 text-lg rounded-xl shadow-lg border border-ez-gold transition-all active:scale-[0.98] disabled:opacity-70 flex items-center justify-center gap-2"
                         >
                             {isLoading ? 'Processing...' : (
                                 <>

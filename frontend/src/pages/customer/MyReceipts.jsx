@@ -43,20 +43,20 @@ const MyReceipts = () => {
     return (
         <div className="max-w-4xl mx-auto space-y-8 pb-12">
             <div>
-                <h1 className="text-3xl font-bold text-gray-900">Payment Receipts</h1>
-                <p className="text-gray-500 mt-2">View and download your official sacrificial booking receipts.</p>
+                <h1 className="text-4xl font-bold text-ez-emerald font-serif">Payment Receipts</h1>
+                <p className="text-gray-500 mt-2 italic text-lg">View and download your official sacrificial booking receipts.</p>
             </div>
 
-            <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex gap-4 items-end">
+            <div className="bg-white p-6 rounded-2xl shadow-sm border border-ez-gold/20 flex gap-4 items-end">
                 <div className="flex-1">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Select Booking</label>
+                    <label className="block text-sm font-bold text-ez-emerald uppercase tracking-wider mb-2">Select Booking</label>
                     <select 
                         value={bookingId}
                         onChange={(e) => {
                             setBookingId(e.target.value);
                             handleFetchReceipt(e.target.value);
                         }}
-                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full p-3 bg-ez-cream/50 border border-ez-gold/30 rounded-xl outline-none focus:ring-2 focus:ring-ez-gold transition-shadow text-ez-emerald font-semibold"
                     >
                         <option value="">Choose an order...</option>
                         {bookings.map(b => (
@@ -73,17 +73,17 @@ const MyReceipts = () => {
                     <Loader2 className="w-8 h-8 animate-spin text-green-600" />
                 </div>
             ) : receipt ? (
-                <div className="bg-white p-12 rounded-3xl shadow-xl border border-gray-100 max-w-2xl mx-auto relative overflow-hidden">
+                <div className="bg-white p-12 rounded-3xl shadow-xl border border-ez-gold/30 max-w-2xl mx-auto relative overflow-hidden">
                     {/* Watermark/Stamp */}
-                    <div className="absolute top-10 right-10 opacity-10 -rotate-12">
-                        <Receipt className="w-32 h-32 text-green-600" />
+                    <div className="absolute top-10 right-10 opacity-[0.03] -rotate-12 pointer-events-none">
+                        <Receipt className="w-48 h-48 text-ez-emerald" />
                     </div>
 
-                    <div className="border-b-2 border-dashed border-gray-100 pb-8 mb-8 text-center">
-                        <div className="w-16 h-16 bg-green-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                            <span className="text-white font-black text-2xl">Ez</span>
+                    <div className="border-b-2 border-dashed border-ez-gold/30 pb-8 mb-8 text-center relative z-10">
+                        <div className="w-16 h-16 bg-ez-emerald rounded-2xl flex items-center justify-center mx-auto mb-4 border border-ez-gold/30 shadow-inner">
+                            <span className="text-ez-gold font-serif font-bold text-2xl">☽</span>
                         </div>
-                        <h2 className="text-2xl font-black text-gray-900 tracking-tight uppercase">EzQurbani Official Receipt</h2>
+                        <h2 className="text-3xl font-black text-ez-emerald tracking-tight uppercase font-serif">EzQurbani Official Receipt</h2>
                         <p className="text-gray-400 text-sm mt-1">Receipt ID: {receipt.receipt_no}</p>
                     </div>
 
@@ -105,20 +105,20 @@ const MyReceipts = () => {
                             <span className="text-gray-900 font-bold">{receipt.tag_no}</span>
                         </div>
 
-                        <div className="bg-gray-50 p-6 rounded-2xl mt-8">
-                            <div className="flex justify-between items-center text-xl font-black text-gray-900">
-                                <span>Total Paid</span>
+                        <div className="bg-ez-cream p-6 rounded-2xl mt-8 border border-ez-gold/20">
+                            <div className="flex justify-between items-center text-xl font-black text-ez-emerald">
+                                <span className="font-serif">Total Paid</span>
                                 <span>Rs. {parseFloat(receipt.amount).toLocaleString()}</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="mt-12 flex gap-4 print:hidden">
-                        <button onClick={() => window.print()} className="flex-1 flex items-center justify-center gap-2 py-3 bg-gray-900 text-white font-bold rounded-xl hover:bg-black transition-colors">
-                            <Download className="w-4 h-4" /> Download PDF
+                    <div className="mt-12 flex gap-4 print:hidden relative z-10">
+                        <button onClick={() => window.print()} className="flex-1 flex items-center justify-center gap-2 py-4 bg-ez-gold hover:bg-ez-gold-light text-ez-emerald font-black rounded-xl transition-colors shadow-lg border border-ez-gold">
+                            <Download className="w-5 h-5" /> Download PDF
                         </button>
-                        <button onClick={() => window.print()} className="px-6 py-3 border-2 border-gray-100 text-gray-600 font-bold rounded-xl hover:bg-gray-50 transition-colors">
-                            <Printer className="w-4 h-4" />
+                        <button onClick={() => window.print()} className="px-6 py-4 border-2 border-ez-gold/30 text-ez-emerald font-bold rounded-xl hover:bg-ez-cream transition-colors">
+                            <Printer className="w-5 h-5" />
                         </button>
                     </div>
                 </div>

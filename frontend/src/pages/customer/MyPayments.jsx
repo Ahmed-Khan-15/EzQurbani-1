@@ -63,27 +63,28 @@ const MyPayments = () => {
 
     return (
         <div className="max-w-xl mx-auto py-8">
-            <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden">
-                <div className="bg-blue-600 p-8 text-white relative">
-                    <h2 className="text-2xl font-bold">Payment Portal</h2>
-                    <p className="opacity-90">Securely finalize your booking for Order #{booking.booking_id}</p>
-                    <div className="absolute top-8 right-8">
-                        <CreditCard className="w-10 h-10 opacity-20" />
+            <div className="bg-white rounded-3xl shadow-xl border border-ez-gold/20 overflow-hidden">
+                <div className="bg-ez-emerald p-8 text-ez-cream relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-ez-gold/10 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+                    <h2 className="text-3xl font-bold font-serif text-ez-gold">Payment Portal</h2>
+                    <p className="opacity-90 mt-1 italic">Securely finalize your booking for Order #{booking.booking_id}</p>
+                    <div className="absolute top-8 right-8 text-ez-gold/20">
+                        <CreditCard className="w-12 h-12" />
                     </div>
                 </div>
 
-                <div className="p-8">
-                    <div className="mb-8 p-4 bg-gray-50 rounded-2xl">
-                        <p className="text-sm text-gray-500 mb-1 font-medium uppercase tracking-wider">Total to Pay</p>
-                        <p className="text-3xl font-extrabold text-gray-900">Rs. {parseFloat(booking.total_amount).toLocaleString()}</p>
+                <div className="p-8 bg-ez-cream/30">
+                    <div className="mb-8 p-6 bg-white border border-ez-gold/30 rounded-2xl shadow-sm text-center">
+                        <p className="text-sm text-gray-500 mb-1 font-bold uppercase tracking-widest">Total to Pay</p>
+                        <p className="text-4xl font-black text-ez-emerald">Rs. {parseFloat(booking.total_amount).toLocaleString()}</p>
                     </div>
 
                     {success ? (
                         <div className="text-center py-8">
-                            <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 animate-bounce">
-                                <CheckCircle className="w-10 h-10 text-green-600" />
+                            <div className="w-24 h-24 bg-ez-gold/20 rounded-full flex items-center justify-center mx-auto mb-6 animate-bounce shadow-inner">
+                                <CheckCircle className="w-12 h-12 text-ez-emerald" />
                             </div>
-                            <h3 className="text-2xl font-bold text-gray-900">Payment Successful!</h3>
+                            <h3 className="text-3xl font-bold text-ez-emerald font-serif">Payment Successful!</h3>
                             <p className="text-gray-500 mt-2">Generating your official receipt...</p>
                         </div>
                     ) : (
@@ -96,8 +97,8 @@ const MyPayments = () => {
                                             key={method.method_id}
                                             className={`flex items-center gap-4 p-4 rounded-xl border-2 cursor-pointer transition-all ${
                                                 selectedMethod === method.method_id 
-                                                ? 'border-blue-500 bg-blue-50 ring-2 ring-blue-100' 
-                                                : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                                                ? 'border-ez-gold bg-ez-gold/5 ring-4 ring-ez-gold/10' 
+                                                : 'border-ez-gold/10 hover:border-ez-gold/30 hover:bg-white bg-white/50'
                                             }`}
                                         >
                                             <input 
@@ -107,16 +108,16 @@ const MyPayments = () => {
                                                 value={method.method_id}
                                                 onChange={(e) => setSelectedMethod(parseInt(e.target.value))}
                                             />
-                                            <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                                                selectedMethod === method.method_id ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-400'
+                                            <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-sm ${
+                                                selectedMethod === method.method_id ? 'bg-ez-emerald text-ez-gold' : 'bg-gray-100 text-gray-400'
                                             }`}>
-                                                {method.name.includes('Cash') ? <Wallet className="w-5 h-5" /> : <Landmark className="w-5 h-5" />}
+                                                {method.name.includes('Cash') ? <Wallet className="w-6 h-6" /> : <Landmark className="w-6 h-6" />}
                                             </div>
                                             <div className="flex-1">
-                                                <p className={`font-bold ${selectedMethod === method.method_id ? 'text-blue-900' : 'text-gray-700'}`}>{method.name}</p>
-                                                <p className="text-xs text-gray-400">Process payment via {method.name}</p>
+                                                <p className={`font-bold text-lg ${selectedMethod === method.method_id ? 'text-ez-emerald' : 'text-gray-700'}`}>{method.name}</p>
+                                                <p className="text-xs text-gray-500">Process payment via {method.name}</p>
                                             </div>
-                                            {selectedMethod === method.method_id && <CheckCircle className="w-5 h-5 text-blue-600" />}
+                                            {selectedMethod === method.method_id && <CheckCircle className="w-6 h-6 text-ez-gold" />}
                                         </label>
                                     ))}
                                 </div>
@@ -131,7 +132,7 @@ const MyPayments = () => {
                             <button
                                 type="submit"
                                 disabled={isLoading}
-                                className="w-full bg-gray-900 hover:bg-black text-white font-bold py-4 rounded-xl transition-all shadow-lg active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+                                className="w-full bg-ez-gold hover:bg-ez-gold-light text-ez-emerald font-black text-lg py-5 rounded-xl transition-all shadow-xl shadow-ez-gold/20 active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2 border border-ez-gold"
                             >
                                 {isLoading ? (
                                     <>

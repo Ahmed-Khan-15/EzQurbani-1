@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+@theme {
+  --color-ez-emerald: #1a4a35;
+  --color-ez-emerald-light: #2d7a56;
+  --color-ez-gold: #c9a84c;
+  --color-ez-gold-light: #e8c87a;
+  --color-ez-cream: #fdf6e8;
+  --color-ez-dark: #1a1a18;
+}
+
 @layer base {
   html { scroll-behavior: smooth; }
   body { background: #fdf6e8; }

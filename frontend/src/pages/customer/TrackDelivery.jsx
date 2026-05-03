@@ -57,17 +57,17 @@ const TrackDelivery = () => {
     return (
         <div className="max-w-4xl mx-auto space-y-8 pb-12">
             <div>
-                <h1 className="text-3xl font-bold text-gray-900 text-center">Track Your Sacrifice</h1>
-                <p className="text-gray-500 mt-2 text-center">Enter your booking ID or select from your active orders.</p>
+                <h1 className="text-4xl font-bold text-ez-emerald font-serif text-center">Track Your Sacrifice</h1>
+                <p className="text-gray-500 mt-2 text-center italic text-lg">Enter your booking ID or select from your active orders.</p>
             </div>
 
-            <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 items-end">
+            <div className="bg-white p-8 rounded-3xl shadow-sm border border-ez-gold/20 flex flex-col md:flex-row gap-4 items-end">
                 <div className="flex-1">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Select Booking</label>
+                    <label className="block text-sm font-bold text-ez-emerald uppercase tracking-wider mb-2">Select Booking</label>
                     <select 
                         value={bookingId}
                         onChange={(e) => setBookingId(e.target.value)}
-                        className="w-full p-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:ring-2 focus:ring-green-500"
+                        className="w-full p-3 bg-ez-cream/50 border border-ez-gold/30 rounded-xl outline-none focus:ring-2 focus:ring-ez-gold font-semibold text-ez-emerald"
                     >
                         <option value="">Select an order...</option>
                         {bookings.map(b => (
@@ -80,7 +80,7 @@ const TrackDelivery = () => {
                 <button
                     onClick={() => handleTrack(bookingId)}
                     disabled={!bookingId || loading}
-                    className="w-full md:w-auto px-8 py-3 bg-green-600 text-white font-bold rounded-xl shadow-lg shadow-green-100 disabled:opacity-50 transition-all active:scale-[0.98]"
+                    className="w-full md:w-auto px-8 py-3 bg-ez-gold hover:bg-ez-gold-light text-ez-emerald font-bold rounded-xl shadow-lg border border-ez-gold disabled:opacity-50 transition-all active:scale-[0.98]"
                 >
                     {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Track Now'}
                 </button>
@@ -99,7 +99,7 @@ const TrackDelivery = () => {
             {trackingInfo && (
                 <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
                     {/* Status Tracker */}
-                    <div className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100">
+                    <div className="bg-white p-8 rounded-3xl shadow-xl border border-ez-gold/30">
                         <div className="flex justify-between items-center mb-12">
                             {steps.map((step, index) => {
                                 const currentStatusIdx = getStatusIndex(trackingInfo.status);
@@ -112,16 +112,16 @@ const TrackDelivery = () => {
                                         {/* Connector Line */}
                                         {index < steps.length - 1 && (
                                             <div className={`absolute left-1/2 top-5 w-full h-1 z-0 ${
-                                                index < currentStatusIdx ? 'bg-green-500' : 'bg-gray-100'
+                                                index < currentStatusIdx ? 'bg-ez-gold' : 'bg-ez-cream border-t border-dashed border-ez-gold/30'
                                             }`} />
                                         )}
                                         
                                         <div className={`w-10 h-10 rounded-full flex items-center justify-center z-10 border-4 ${
-                                            isCompleted ? 'bg-green-600 border-green-100 text-white' : 'bg-white border-gray-100 text-gray-300'
-                                        } ${isCurrent ? 'ring-4 ring-green-100 animate-pulse' : ''}`}>
+                                            isCompleted ? 'bg-ez-emerald border-ez-gold/50 text-ez-gold shadow-md' : 'bg-white border-ez-cream text-gray-300'
+                                        } ${isCurrent ? 'ring-4 ring-ez-gold/20 animate-pulse bg-white border-ez-gold text-ez-gold' : ''}`}>
                                             <Icon className="w-5 h-5" />
                                         </div>
-                                        <span className={`text-xs font-bold mt-3 text-center ${isCompleted ? 'text-green-700' : 'text-gray-400'}`}>
+                                        <span className={`text-xs font-bold mt-3 text-center ${isCompleted || isCurrent ? 'text-ez-emerald' : 'text-gray-400'}`}>
                                             {step.label}
                                         </span>
                                     </div>
@@ -129,29 +129,29 @@ const TrackDelivery = () => {
                             })}
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-gray-100">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 pt-8 border-t border-ez-gold/20">
                             <div className="space-y-4">
-                                <div className="flex items-center gap-3 text-gray-600">
-                                    <Truck className="w-5 h-5 text-green-600" />
+                                <div className="flex items-center gap-3 text-ez-emerald">
+                                    <div className="p-2 bg-ez-cream rounded-lg border border-ez-gold/20"><Truck className="w-5 h-5 text-ez-gold" /></div>
                                     <div>
-                                        <p className="text-xs font-medium uppercase tracking-wider text-gray-400">Agent Details</p>
-                                        <p className="font-bold text-gray-900">{trackingInfo.agent_name || 'Assigning soon...'}</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 font-serif">Agent Details</p>
+                                        <p className="font-bold text-ez-emerald text-lg">{trackingInfo.agent_name || 'Assigning soon...'}</p>
                                     </div>
                                 </div>
-                                <div className="flex items-center gap-3 text-gray-600">
-                                    <MapPin className="w-5 h-5 text-green-600" />
+                                <div className="flex items-center gap-3 text-ez-emerald">
+                                    <div className="p-2 bg-ez-cream rounded-lg border border-ez-gold/20"><MapPin className="w-5 h-5 text-ez-gold" /></div>
                                     <div>
-                                        <p className="text-xs font-medium uppercase tracking-wider text-gray-400">Delivery Address</p>
-                                        <p className="font-bold text-gray-900">{trackingInfo.address_line}</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 font-serif">Delivery Address</p>
+                                        <p className="font-bold text-ez-emerald">{trackingInfo.address_line}</p>
                                     </div>
                                 </div>
                             </div>
                             <div className="space-y-4">
-                                <div className="flex items-center gap-3 text-gray-600">
-                                    <Calendar className="w-5 h-5 text-green-600" />
+                                <div className="flex items-center gap-3 text-ez-emerald">
+                                    <div className="p-2 bg-ez-cream rounded-lg border border-ez-gold/20"><Calendar className="w-5 h-5 text-ez-gold" /></div>
                                     <div>
-                                        <p className="text-xs font-medium uppercase tracking-wider text-gray-400">Estimated Delivery</p>
-                                        <p className="font-bold text-gray-900">
+                                        <p className="text-xs font-bold uppercase tracking-widest text-gray-400 font-serif">Estimated Delivery</p>
+                                        <p className="font-bold text-ez-emerald text-lg">
                                             {trackingInfo.delivery_date ? new Date(trackingInfo.delivery_date).toLocaleDateString() : 'Scheduling...'}
                                         </p>
                                     </div>
