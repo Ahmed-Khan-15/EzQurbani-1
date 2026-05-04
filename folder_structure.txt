@@ -1,0 +1,122 @@
+database/
+├── 01_schema.sql
+├── 02_seed.sql
+├── 03_views.sql
+├── 04_queries.sql
+├── 05_functions.sql
+└── 06_indexes.sql
+
+
+
+
+backend/
+├── .env
+├── .gitignore
+├── package.json
+├── index.js
+│
+├── config/
+│   └── db.js                    ← pg pool setup
+│
+├── middleware/
+│   ├── auth.js                  ← verifyToken + requireAdmin
+│   └── errorHandler.js          ← global error handler
+│
+├── routes/
+│   ├── auth.js                  ← /api/auth/register, /login
+│   ├── animals.js               ← /api/animals
+│   ├── bookings.js              ← /api/bookings
+│   ├── payments.js              ← /api/payments
+│   ├── admin.js                 ← /api/admin
+│   └── delivery.js              ← /api/delivery
+│
+├── controllers/
+│   ├── authController.js        ← register(), login() logic
+│   ├── animalController.js      ← getAnimals(), getAnimalById()
+│   ├── bookingController.js     ← createBooking(), getMyBookings()
+│   ├── paymentController.js     ← makePayment(), getReceipt()
+│   ├── adminController.js       ← getDashboardStats(), manageAnimals()
+│   └── deliveryController.js    ← createDelivery(), trackDelivery()
+│
+└── queries/
+    ├── authQueries.js           ← SQL strings for auth routes
+    ├── animalQueries.js         ← SQL strings for animal routes
+    ├── bookingQueries.js        ← SQL strings for booking routes
+    ├── paymentQueries.js        ← SQL strings for payment routes
+    ├── adminQueries.js          ← SQL strings for admin routes
+    └── deliveryQueries.js       ← SQL strings for delivery routes
+
+
+
+
+
+
+frontend/
+├── .env
+├── .gitignore
+├── package.json
+├── index.html
+│
+└── src/
+    ├── main.jsx
+    ├── App.jsx                       ← routes defined here
+    │
+    ├── context/
+    │   └── AuthContext.jsx           ← JWT storage, user state, login/logout
+    │
+    ├── api/
+    │   ├── axiosInstance.js          ← base axios with token header
+    │   ├── authApi.js                ← register(), login() calls
+    │   ├── animalApi.js              ← getAnimals(), getAnimalById()
+    │   ├── bookingApi.js             ← createBooking(), getMyBookings()
+    │   ├── paymentApi.js             ← makePayment(), getReceipt()
+    │   ├── adminApi.js               ← getDashboardStats(), etc.
+    │   └── deliveryApi.js            ← trackDelivery(), updateStatus()
+    │
+    ├── components/
+    │   ├── common/
+    │   │   ├── Navbar.jsx
+    │   │   ├── Sidebar.jsx
+    │   │   ├── ProtectedRoute.jsx    ← redirects based on role
+    │   │   ├── StatusBadge.jsx       ← reusable colored badge
+    │   │   └── LoadingSpinner.jsx
+    │   │
+    │   ├── customer/
+    │   │   ├── AnimalCard.jsx        ← animal listing card
+    │   │   ├── BookingCard.jsx       ← single booking display
+    │   │   ├── BookingForm.jsx       ← full / hissa booking form
+    │   │   ├── HissaSelector.jsx     ← pick a hissa slot (1-7)
+    │   │   ├── PaymentForm.jsx       ← payment method + amount
+    │   │   ├── ReceiptCard.jsx       ← receipt display
+    │   │   └── DeliveryTracker.jsx   ← delivery status steps
+    │   │
+    │   └── admin/
+    │       ├── StatsCard.jsx         ← dashboard summary card
+    │       ├── BookingsTable.jsx     ← all bookings table
+    │       ├── AnimalsTable.jsx      ← manage animals table
+    │       ├── AddAnimalForm.jsx     ← add new animal form
+    │       ├── ScheduleForm.jsx      ← create slaughter schedule
+    │       ├── ScheduleTable.jsx     ← view all schedules
+    │       ├── DeliveryTable.jsx     ← manage deliveries
+    │       └── UsersTable.jsx        ← all registered users
+    │
+    └── pages/
+        ├── Login.jsx
+        ├── Register.jsx
+        │
+        ├── customer/
+        │   ├── CustomerDashboard.jsx     ← layout + sidebar
+        │   ├── BrowseAnimals.jsx         ← browse + filter animals
+        │   ├── MyBookings.jsx            ← customer's bookings list
+        │   ├── BookAnimal.jsx            ← booking flow page
+        │   ├── MyPayments.jsx            ← payment history + receipts
+        │   └── TrackDelivery.jsx         ← delivery tracking page
+        │
+        └── admin/
+            ├── AdminDashboard.jsx        ← layout + sidebar
+            ├── AdminOverview.jsx         ← stats + summary
+            ├── ManageAnimals.jsx         ← add/view/update animals
+            ├── ManageBookings.jsx        ← all bookings management
+            ├── ManageSchedules.jsx       ← slaughter scheduling
+            ├── ManageDeliveries.jsx      ← delivery assignment
+            └── ManageUsers.jsx           ← view all users
