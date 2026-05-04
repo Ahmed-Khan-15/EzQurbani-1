@@ -67,11 +67,11 @@ const ManageBookings = () => {
                                     <td className="px-6 py-4 font-mono text-gray-500 font-bold">#{booking.booking_id}</td>
                                     <td className="px-6 py-4">
                                         <div className="flex flex-col">
-                                            <span className="font-bold text-white">{booking.user_name}</span>
-                                            <span className="text-xs text-gray-500">{booking.user_email}</span>
+                                            <span className="font-bold text-white">{booking.customer_name}</span>
+                                            <span className="text-xs text-gray-500">{booking.customer_phone || 'No phone'}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 capitalize font-medium">{booking.animal_name} ({booking.tag_no})</td>
+                                    <td className="px-6 py-4 capitalize font-medium">{booking.category_name} ({booking.tag_no})</td>
                                     <td className="px-6 py-4 capitalize">{booking.booking_type}</td>
                                     <td className="px-6 py-4 font-black text-white">Rs. {parseFloat(booking.total_amount).toLocaleString()}</td>
                                     <td className="px-6 py-4"><StatusBadge status={booking.booking_status} /></td>
