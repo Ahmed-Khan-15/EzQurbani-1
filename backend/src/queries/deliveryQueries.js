@@ -32,6 +32,19 @@ export const GET_ALL_DELIVERIES = `
 
 export const GET_ALL_AGENTS = `SELECT * FROM DELIVERY_AGENT`;
 
+export const GET_PENDING_BOOKINGS_FOR_DELIVERY = `
+    SELECT b.booking_id, p.name as customer_name, a.tag_no, ac.name as animal_category,
+           (SELECT address_id FROM ADDRESS WHERE user_id = b.user_id LIMIT 1) as address_id
+    FROM BOOKING b
+    JOIN PERSON p ON b.user_id = p.person_id
+    LEFT JOIN ANIMAL a ON b.animal_id = a.animal_id
+    LEFT JOIN ANIMAL_CATEGORY ac ON a.category_id = ac.category_id
+    WHERE b.status = 'confirmed' 
+      AND NOT EXISTS (
+          SELECT 1 FROM MEAT_PACKAGE mp WHERE mp.booking_id = b.booking_id
+      )
+`;
+
 export const INSERT_MEAT_PACKAGE = `
     INSERT INTO MEAT_PACKAGE (booking_id, weight, status)
     VALUES ($1, $2, $3)

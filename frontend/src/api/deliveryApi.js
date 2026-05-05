@@ -7,6 +7,11 @@ export const trackDelivery = async (bookingId) => {
 };
 
 // Admin functions
+export const getPendingDeliveries = async () => {
+    const response = await axiosInstance.get('/delivery/pending');
+    return response.data;
+};
+
 export const getAllDeliveries = async () => {
     const response = await axiosInstance.get('/delivery');
     return response.data;

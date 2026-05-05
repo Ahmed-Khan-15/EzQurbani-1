@@ -87,11 +87,24 @@ const TrackDelivery = () => {
             </div>
 
             {error && (
-                <div className="bg-amber-50 border-l-4 border-amber-400 p-6 rounded-xl flex items-center gap-4 text-amber-800">
-                    <Clock className="w-6 h-6 flex-shrink-0" />
-                    <div>
-                        <p className="font-bold text-lg">Still in Progress</p>
-                        <p className="text-sm opacity-90">{error}</p>
+                <div className="flex flex-col items-center justify-center p-12 bg-white rounded-3xl shadow-sm border border-ez-gold/20 text-center animate-in fade-in slide-in-from-bottom-4">
+                    <div className="relative mb-6">
+                        <div className="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center relative z-10 shadow-lg border-4 border-white">
+                            <Clock className="w-8 h-8 text-amber-500" />
+                        </div>
+                        {/* Radar Pulse Effect */}
+                        <div className="absolute inset-0 bg-amber-400 rounded-full animate-ping opacity-20" style={{ animationDuration: '2s' }}></div>
+                        <div className="absolute -inset-4 border-2 border-amber-100 rounded-full animate-[spin_4s_linear_infinite] border-t-amber-400"></div>
+                    </div>
+                    
+                    <h3 className="text-2xl font-bold text-ez-emerald font-serif mb-2">Awaiting Progress</h3>
+                    <p className="text-gray-500 max-w-sm">Your order is confirmed. Tracking information will appear here once the fulfillment process begins.</p>
+                    
+                    {/* Bouncing dots */}
+                    <div className="flex gap-2 mt-6">
+                        <span className="w-2.5 h-2.5 bg-ez-gold rounded-full animate-bounce shadow-sm" style={{ animationDelay: '0ms' }}></span>
+                        <span className="w-2.5 h-2.5 bg-ez-gold rounded-full animate-bounce shadow-sm" style={{ animationDelay: '150ms' }}></span>
+                        <span className="w-2.5 h-2.5 bg-ez-gold rounded-full animate-bounce shadow-sm" style={{ animationDelay: '300ms' }}></span>
                     </div>
                 </div>
             )}

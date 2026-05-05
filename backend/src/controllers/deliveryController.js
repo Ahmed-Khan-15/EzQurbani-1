@@ -8,8 +8,20 @@ import {
     UPDATE_DELIVERY_STATUS,
     GET_ALL_DELIVERIES,
     GET_ALL_AGENTS,
-    INSERT_MEAT_PACKAGE
+    INSERT_MEAT_PACKAGE,
+    GET_PENDING_BOOKINGS_FOR_DELIVERY
 } from '../queries/deliveryQueries.js';
+
+// Get pending bookings that need delivery assignment
+export const getPendingDeliveries = async (req, res) => {
+    try {
+        const result = await pool.query(GET_PENDING_BOOKINGS_FOR_DELIVERY);
+        res.json(result.rows);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
 
 // Create a meat package (Admin only)
 export const createMeatPackage = async (req, res) => {

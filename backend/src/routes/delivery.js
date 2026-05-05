@@ -8,13 +8,15 @@ import {
     updateDeliveryStatus,
     getAllDeliveries,
     getAllAgents,
-    createMeatPackage
+    createMeatPackage,
+    getPendingDeliveries
 } from '../controllers/deliveryController.js';
 import { verifyToken, requireAdmin } from '../middleware/auth.js';
 
 const router = express.Router();
 
 // Admin-only routes
+router.get('/pending', verifyToken, requireAdmin, getPendingDeliveries);
 router.get('/agents', verifyToken, requireAdmin, getAllAgents);
 router.post('/package', verifyToken, requireAdmin, createMeatPackage);
 router.post('/', verifyToken, requireAdmin, createDelivery);
