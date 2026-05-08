@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { Routes, Route, Link, useNavigate, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
+import { getMyNotifications, markNotificationAsRead } from '../../api/notificationApi';
 import { 
     LayoutDashboard, 
     Search, 
@@ -11,7 +12,9 @@ import {
     LogOut, 
     User as UserIcon,
     Menu,
-    X
+    X,
+    Bell,
+    Check
 } from 'lucide-react';
 
 // Sub-pages
@@ -27,7 +30,33 @@ const CustomerDashboard = () => {
     const { user, logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
-    const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+    const [notifications, setNotifications] = useState([]);
+    const [showNotifications, setShowNotifications] = useState(false);
+
+    useEffect(() => {
+        fetchNotifications();
+        const interval = setInterval(fetchNotifications, 30000); // Poll every 30s
+        return () => clearInterval(interval);
+    }, []);
+
+    const fetchNotifications = async () => {
+        try {
+            const data = await getMyNotifications();
+            setNotifications(data);
+        } catch (err) {
+            console.error('Failed to fetch notifications');
+        }
+    };
+
+    const handleMarkAsRead = async (id) => {
+        try {
+            await markNotificationAsRead(id);
+            setNotifications(prev => prev.map(n => n.notification_id === id ? { ...n, is_read: true } : n));
+        } catch (err) {
+            console.error('Failed to mark notification as read');
+        }
+    };
 
     const handleLogout = () => {
         logout();
@@ -42,6 +71,8 @@ const CustomerDashboard = () => {
         { path: '/dashboard/customer/receipts', name: 'My Receipts', icon: Receipt },
         { path: '/dashboard/customer/track', name: 'Track Delivery', icon: Truck },
     ];
+
+    const unreadCount = notifications.filter(n => !n.is_read).length;
 
     return (
         <div className="flex h-screen bg-ez-cream overflow-hidden">
@@ -114,6 +145,58 @@ const CustomerDashboard = () => {
                     </button>
                     
                     <div className="flex items-center gap-4">
+                        {/* Notification Bell */}
+                        <div className="relative">
+                            <button 
+                                onClick={() => setShowNotifications(!showNotifications)}
+                                className="p-2 hover:bg-ez-cream rounded-lg text-ez-emerald transition-colors relative"
+                            >
+                                <Bell className="w-5 h-5" />
+                                {unreadCount > 0 && (
+                                    <span className="absolute top-1 right-1 w-4 h-4 bg-red-500 text-white text-[10px] flex items-center justify-center rounded-full border-2 border-white font-bold">
+                                        {unreadCount}
+                                    </span>
+                                )}
+                            </button>
+
+                            {showNotifications && (
+                                <div className="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-xl border border-ez-gold/20 z-50 overflow-hidden">
+                                    <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+                                        <h3 className="font-bold text-ez-emerald">Notifications</h3>
+                                        <span className="text-xs text-gray-500">{unreadCount} Unread</span>
+                                    </div>
+                                    <div className="max-h-96 overflow-y-auto">
+                                        {notifications.length === 0 ? (
+                                            <div className="p-8 text-center text-gray-400 text-sm italic">
+                                                No notifications yet
+                                            </div>
+                                        ) : (
+                                            notifications.map(notif => (
+                                                <div 
+                                                    key={notif.notification_id}
+                                                    className={`p-4 border-b border-gray-50 flex items-start gap-3 transition-colors ${notif.is_read ? 'opacity-60' : 'bg-ez-gold/5'}`}
+                                                >
+                                                    <div className="flex-1">
+                                                        <p className="text-sm text-gray-700 leading-snug">{notif.message}</p>
+                                                        <p className="text-[10px] text-gray-400 mt-1">{new Date(notif.created_at).toLocaleString()}</p>
+                                                    </div>
+                                                    {!notif.is_read && (
+                                                        <button 
+                                                            onClick={() => handleMarkAsRead(notif.notification_id)}
+                                                            className="p-1 hover:bg-ez-emerald/10 text-ez-emerald rounded transition-colors"
+                                                            title="Mark as read"
+                                                        >
+                                                            <Check className="w-4 h-4" />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            ))
+                                        )}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
                         <span className="text-xs font-bold bg-ez-gold/20 text-ez-emerald px-3 py-1.5 rounded-full capitalize border border-ez-gold/30 shadow-sm">
                             {user?.role} Portal
                         </span>
@@ -121,7 +204,7 @@ const CustomerDashboard = () => {
                 </header>
 
                 {/* Nested Content Scrollable */}
-                <div className="flex-1 overflow-y-auto bg-ez-cream p-6">
+                <div className="flex-1 overflow-y-auto bg-ez-cream p-6" onClick={() => showNotifications && setShowNotifications(false)}>
                     <Routes>
                         <Route path="/" element={<Overview user={user} />} />
                         <Route path="/browse" element={<BrowseAnimals />} />

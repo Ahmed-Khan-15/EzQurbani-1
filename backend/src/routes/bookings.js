@@ -6,7 +6,8 @@ import {
     createBooking,
     getMyBookings,
     getAllBookings,
-    updateBookingStatus
+    updateBookingStatus,
+    cancelBooking
 } from '../controllers/bookingController.js';
 import { verifyToken, requireAdmin } from '../middleware/auth.js';
 
@@ -15,6 +16,7 @@ const router = express.Router();
 // Customer routes
 router.post('/', verifyToken, createBooking);
 router.get('/my', verifyToken, getMyBookings);
+router.patch('/:id/cancel', verifyToken, cancelBooking);
 
 // Admin routes
 router.get('/', verifyToken, requireAdmin, getAllBookings);

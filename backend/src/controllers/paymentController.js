@@ -10,6 +10,7 @@ import {
     GET_ALL_METHODS
 } from '../queries/paymentQueries.js';
 import { UPDATE_BOOKING_STATUS } from '../queries/bookingQueries.js';
+import { createNotification } from './notificationController.js';
 
 // Get all payment methods
 export const getPaymentMethods = async (req, res) => {
@@ -54,6 +55,12 @@ export const makePayment = async (req, res) => {
         await client.query(UPDATE_BOOKING_STATUS, ['confirmed', booking_id]);
 
         await client.query('COMMIT');
+
+        await createNotification(
+            pool, 
+            user_id, 
+            `Payment successful! Your receipt ${receiptNo} has been generated for booking #${booking_id}.`
+        );
 
         res.status(201).json({
             payment: newPayment,

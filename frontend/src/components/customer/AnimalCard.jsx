@@ -53,14 +53,6 @@ const AnimalCard = ({ animal, onBookFull, onViewHissas }) => {
                     >
                         Book Full Animal
                     </button>
-                    {['Cow', 'Camel'].includes(animal.category_name) && (
-                        <button
-                            onClick={() => onViewHissas(animal)}
-                            className="w-full bg-white hover:bg-ez-cream text-ez-emerald font-bold py-2.5 rounded-lg border border-ez-gold/30 hover:border-ez-gold transition-colors"
-                        >
-                            View Hissas
-                        </button>
-                    )}
                 </div>
             </div>
         </div>

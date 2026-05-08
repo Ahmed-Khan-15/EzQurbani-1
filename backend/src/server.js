@@ -8,6 +8,8 @@ import bookingRoutes from './routes/bookings.js';
 import paymentRoutes from './routes/payments.js';
 import adminRoutes from './routes/admin.js';
 import deliveryRoutes from './routes/delivery.js';
+import notificationRoutes from './routes/notifications.js';
+import reviewRoutes from './routes/reviews.js';
 import errorHandler from './middleware/errorHandler.js';
 
 dotenv.config();
@@ -35,6 +37,8 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/delivery', deliveryRoutes);
+app.use('/api/notifications', notificationRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 // Basic Route
 app.get('/', (req, res) => {

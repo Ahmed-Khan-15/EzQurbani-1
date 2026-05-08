@@ -75,6 +75,26 @@ export const updateDeliveryStatus = async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'Delivery order not found' });
         }
+
+        // Get user_id for notification
+        const userQuery = await pool.query(`
+            SELECT b.user_id 
+            FROM DELIVERY_ORDER d
+            JOIN MEAT_PACKAGE mp ON d.package_id = mp.package_id
+            JOIN BOOKING b ON mp.booking_id = b.booking_id
+            WHERE d.delivery_id = $1
+        `, [req.params.id]);
+
+        if (userQuery.rows.length > 0) {
+            const userId = userQuery.rows[0].user_id;
+            const { createNotification } = await import('./notificationController.js');
+            await createNotification(
+                pool,
+                userId,
+                `Your delivery status has been updated to: ${status.replace(/_/g, ' ')}`
+            );
+        }
+
         res.json(result.rows[0]);
     } catch (err) {
         console.error(err.message);

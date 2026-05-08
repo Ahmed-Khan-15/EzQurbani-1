@@ -6,7 +6,7 @@ import { CheckCircle, AlertCircle, ArrowLeft, Calendar, Truck, MapPin, Info } fr
 const BookConfirm = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const { animal, hissa, type } = location.state || {};
+    const { animal, hissas, type } = location.state || {};
     
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -20,7 +20,7 @@ const BookConfirm = () => {
         return <div className="p-8 text-center">Invalid selection. Please go back.</div>;
     }
 
-    const price = type === 'hissa' ? parseFloat(hissa.price) : parseFloat(animal.price);
+    const price = type === 'hissa' ? hissas.reduce((acc, h) => acc + parseFloat(h.price), 0) : parseFloat(animal.price);
 
     const isFullAnimal = type === 'full';
     
@@ -45,7 +45,7 @@ const BookConfirm = () => {
         try {
             await createBooking({
                 animal_id: animal.animal_id,
-                hissa_id: hissa?.hissa_id || null,
+                hissa_ids: hissas?.map(h => h.hissa_id) || [],
                 booking_type: type,
                 total_amount: price,
                 qurbani_day: isFullAnimal ? qurbaniDay : null,
@@ -85,7 +85,9 @@ const BookConfirm = () => {
                         </div>
                         <div className="flex justify-between items-center pb-4 border-b border-gray-100">
                             <span className="text-gray-500 font-bold uppercase tracking-widest text-xs font-serif">Booking Option</span>
-                            <span className="text-ez-emerald font-bold capitalize text-lg">{type === 'hissa' ? `Hissa Slot #${hissa.hissa_no}` : 'Full Animal'}</span>
+                            <span className="text-ez-emerald font-bold capitalize text-lg">
+                                {type === 'hissa' ? `Hissa Slots: ${hissas.map(h => `#${h.hissa_no}`).join(', ')}` : 'Full Animal'}
+                            </span>
                         </div>
                         <div className="flex justify-between items-center pb-4 border-b border-gray-100">
                             <span className="text-gray-500 font-bold uppercase tracking-widest text-xs font-serif">Tag Number</span>

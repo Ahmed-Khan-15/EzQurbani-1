@@ -9,6 +9,7 @@ SELECT
     b.booking_id,
     b.user_id,
     p.name AS customer_name,
+    a.animal_id,
     a.tag_no,
     ac.name AS category_name,
     b.booking_type,

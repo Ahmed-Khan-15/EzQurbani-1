@@ -13,13 +13,14 @@ import {
     UPDATE_BOOKING_STATUS,
     INSERT_ADDRESS
 } from '../queries/bookingQueries.js';
+import { createNotification } from './notificationController.js';
 
 // Create a new booking (Most Important Function)
 export const createBooking = async (req, res) => {
-    const { animal_id, hissa_id, discount_id, booking_type, total_amount, qurbani_day, delivery_preference, address_line, city_id } = req.body;
-    const user_id = req.user.id; // From verifyToken middleware
+    const { animal_id, hissa_ids, discount_id, booking_type, total_amount, qurbani_day, delivery_preference, address_line, city_id } = req.body;
+    const user_id = req.user.id;
 
-    const client = await pool.connect(); // Use a single client for transaction
+    const client = await pool.connect();
 
     try {
         await client.query('BEGIN');
@@ -29,11 +30,15 @@ export const createBooking = async (req, res) => {
             if (delivery_preference === 'deliver_alive') {
                 return res.status(400).json({ message: 'Whole animal delivery is only available for full bookings' });
             }
-            if (!hissa_id) throw new Error('Hissa ID is required for hissa booking');
-            const hissaCheck = await client.query(CHECK_HISSA_AVAILABLE, [hissa_id]);
-            if (hissaCheck.rows.length === 0 || hissaCheck.rows[0].status !== 'available') {
-                await client.query('ROLLBACK');
-                return res.status(400).json({ message: 'Selected Hissa is no longer available' });
+            if (!hissa_ids || hissa_ids.length === 0) throw new Error('At least one Hissa ID is required');
+            
+            // Check all hissas
+            for (const id of hissa_ids) {
+                const hissaCheck = await client.query(CHECK_HISSA_AVAILABLE, [id]);
+                if (hissaCheck.rows.length === 0 || hissaCheck.rows[0].status !== 'available') {
+                    await client.query('ROLLBACK');
+                    return res.status(400).json({ message: `Hissa #${id} is no longer available` });
+                }
             }
         } else {
             const animalCheck = await client.query(CHECK_ANIMAL_AVAILABLE, [animal_id]);
@@ -46,7 +51,6 @@ export const createBooking = async (req, res) => {
         // 2. Insert Address if needed
         let address_id = null;
         if (delivery_preference !== 'pickup' && address_line) {
-            // Assume city_id is provided, default to 1 (Karachi) if not for simplicity
             const addressResult = await client.query(INSERT_ADDRESS, [
                 user_id,
                 city_id || 1,
@@ -55,30 +59,56 @@ export const createBooking = async (req, res) => {
             address_id = addressResult.rows[0].address_id;
         }
 
-        // 3. Insert Booking
-        const bookingResult = await client.query(INSERT_BOOKING, [
-            user_id,
-            animal_id,
-            hissa_id || null,
-            discount_id || null,
-            booking_type,
-            total_amount,
-            'pending', // Default status
-            qurbani_day || null,
-            delivery_preference || null,
-            address_id
-        ]);
-        const newBooking = bookingResult.rows[0];
+        const createdBookings = [];
 
-        // 4. Update Status (Prevent Double Booking)
+        // 3. Insert Bookings
         if (booking_type === 'hissa') {
-            await client.query(UPDATE_HISSA_STATUS, ['booked', hissa_id]);
+            // Divide total amount equally among hissas if total_amount is the grand total
+            const pricePerHissa = total_amount / hissa_ids.length;
+
+            for (const id of hissa_ids) {
+                const bookingResult = await client.query(INSERT_BOOKING, [
+                    user_id,
+                    animal_id,
+                    id,
+                    discount_id || null,
+                    booking_type,
+                    pricePerHissa,
+                    'pending',
+                    qurbani_day || null,
+                    delivery_preference || null,
+                    address_id
+                ]);
+                createdBookings.push(bookingResult.rows[0]);
+                await client.query(UPDATE_HISSA_STATUS, ['booked', id]);
+            }
         } else {
+            const bookingResult = await client.query(INSERT_BOOKING, [
+                user_id,
+                animal_id,
+                null,
+                discount_id || null,
+                booking_type,
+                total_amount,
+                'pending',
+                qurbani_day || null,
+                delivery_preference || null,
+                address_id
+            ]);
+            createdBookings.push(bookingResult.rows[0]);
             await client.query(UPDATE_ANIMAL_STATUS, ['booked', animal_id]);
         }
 
         await client.query('COMMIT');
-        res.status(201).json(newBooking);
+
+        // Create notification
+        await createNotification(
+            pool, 
+            user_id, 
+            `Your ${booking_type === 'hissa' ? `${hissa_ids.length} Hissa(s)` : 'Full Animal'} booking has been confirmed successfully!`
+        );
+
+        res.status(201).json(booking_type === 'hissa' ? createdBookings : createdBookings[0]);
 
     } catch (err) {
         await client.query('ROLLBACK');
@@ -123,5 +153,69 @@ export const updateBookingStatus = async (req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ message: 'Server error' });
+    }
+};
+
+// Cancel booking (Customer)
+export const cancelBooking = async (req, res) => {
+    const { id } = req.params;
+    const user_id = req.user.id;
+
+    try {
+        const checkResult = await pool.query('SELECT status, created_at, hissa_id, animal_id FROM BOOKING WHERE booking_id = $1 AND user_id = $2', [id, user_id]);
+        
+        if (checkResult.rows.length === 0) {
+            return res.status(404).json({ message: 'Booking not found or unauthorized' });
+        }
+
+        const booking = checkResult.rows[0];
+
+        if (booking.status !== 'pending') {
+            return res.status(400).json({ message: 'Only pending bookings can be cancelled' });
+        }
+
+        // Validate 7-day rule (May 26, 2026 is Eid)
+        const deadline = new Date('2026-05-19T23:59:59Z');
+        const now = new Date(); // Mockable or current date
+
+        if (now > deadline) {
+            return res.status(400).json({ message: 'Cancellation period has ended (must be 7 days before Eid).' });
+        }
+
+        const client = await pool.connect();
+        try {
+            await client.query('BEGIN');
+
+            const result = await client.query(
+                'UPDATE BOOKING SET status = $1 WHERE booking_id = $2 RETURNING *',
+                ['cancelled', id]
+            );
+
+            // Free up the animal or hissa
+            if (booking.hissa_id) {
+                await client.query(UPDATE_HISSA_STATUS, ['available', booking.hissa_id]);
+            } else if (booking.animal_id) {
+                await client.query(UPDATE_ANIMAL_STATUS, ['available', booking.animal_id]);
+            }
+
+            await client.query('COMMIT');
+
+            await createNotification(
+                pool, 
+                user_id, 
+                `Your booking #${id} has been successfully cancelled.`
+            );
+
+            res.json(result.rows[0]);
+        } catch (err) {
+            await client.query('ROLLBACK');
+            throw err;
+        } finally {
+            client.release();
+        }
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error during cancellation' });
     }
 };
