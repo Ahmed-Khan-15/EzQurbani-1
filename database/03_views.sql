@@ -4,6 +4,7 @@
 -- 1. customer_booking_view
 -- Purpose: For individual users to see their own booking details.
 -- Note: The backend will filter by user_id.
+DROP VIEW IF EXISTS customer_booking_view CASCADE;
 CREATE OR REPLACE VIEW customer_booking_view AS
 SELECT 
     b.booking_id,
@@ -40,6 +41,7 @@ LEFT JOIN ADDRESS addr ON b.address_id = addr.address_id;
 
 -- 2. admin_dashboard_view
 -- Purpose: For administrators to see a global view of all operations.
+DROP VIEW IF EXISTS admin_dashboard_view CASCADE;
 CREATE OR REPLACE VIEW admin_dashboard_view AS
 SELECT 
     b.booking_id,
