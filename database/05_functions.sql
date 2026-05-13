@@ -50,6 +50,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- 5. Trigger: trg_auto_book
+DROP TRIGGER IF EXISTS trg_auto_book ON BOOKING;
 CREATE TRIGGER trg_auto_book
 AFTER INSERT ON BOOKING
 FOR EACH ROW
