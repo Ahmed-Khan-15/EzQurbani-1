@@ -12,7 +12,8 @@ export const getAdvancedReports = async (req, res) => {
             topVendors,
             extremePrices,
             tagLengths,
-            splitNames
+            splitNames,
+            discountsApplied
         ] = await Promise.all([
             pool.query(ADVANCED_REPORTS.SPENDING_ABOVE_AVERAGE),
             pool.query(ADVANCED_REPORTS.HIGHEST_SPENDING_USER),
@@ -22,7 +23,8 @@ export const getAdvancedReports = async (req, res) => {
             pool.query(ADVANCED_REPORTS.TOP_VENDORS),
             pool.query(ADVANCED_REPORTS.EXTREME_PRICED_ANIMALS),
             pool.query(ADVANCED_REPORTS.TAG_LENGTHS),
-            pool.query(ADVANCED_REPORTS.SPLIT_NAMES)
+            pool.query(ADVANCED_REPORTS.SPLIT_NAMES),
+            pool.query(ADVANCED_REPORTS.DISCOUNTS_APPLIED)
         ]);
 
         res.json({
@@ -34,7 +36,8 @@ export const getAdvancedReports = async (req, res) => {
             topVendors: topVendors.rows,
             extremePrices: extremePrices.rows[0],
             tagLengths: tagLengths.rows,
-            splitNames: splitNames.rows
+            splitNames: splitNames.rows,
+            discountsApplied: discountsApplied.rows
         });
     } catch (err) {
         console.error('Reports Error:', err.message);

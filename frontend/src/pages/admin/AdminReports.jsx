@@ -209,6 +209,19 @@ const AdminReports = () => {
                             ]}
                             data={reports.tagLengths}
                         />
+
+                        <ReportTable 
+                            title="Applied Discounts (JOIN with BETWEEN)"
+                            description="Shows bookings joined with discounts based on price ranges using the BETWEEN clause."
+                            icon={TableIcon}
+                            columns={[
+                                { header: 'Booking ID', accessor: 'booking_id' },
+                                { header: 'Amount', accessor: 'total_amount', render: r => `Rs. ${parseFloat(r.total_amount).toLocaleString()}` },
+                                { header: 'Discount Code', accessor: 'code', render: r => <span className="text-ez-gold font-bold">{r.code}</span> },
+                                { header: 'Percentage', accessor: 'percentage', render: r => `${r.percentage}%` }
+                            ]}
+                            data={reports.discountsApplied}
+                        />
                     </div>
                 )}
             </div>

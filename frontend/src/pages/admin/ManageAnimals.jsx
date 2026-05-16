@@ -16,7 +16,8 @@ const ManageAnimals = () => {
         tag_no: '',
         weight: '',
         price: '',
-        status: 'available'
+        status: 'available',
+        health_status: 'Healthy, Vaccinated'
     });
 
     useEffect(() => {
@@ -64,7 +65,7 @@ const ManageAnimals = () => {
             } else {
                 fetchSummary();
             }
-            setFormData({ category_id: 1, vendor_id: 1, tag_no: '', weight: '', price: '', status: 'available' });
+            setFormData({ category_id: 1, vendor_id: 1, tag_no: '', weight: '', price: '', status: 'available', health_status: 'Healthy, Vaccinated' });
         } catch (err) {
             alert('Failed to add animal');
         }
@@ -111,6 +112,11 @@ const ManageAnimals = () => {
                         required className="p-2 bg-transparent border border-ez-gold/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-ez-gold"
                         value={formData.price} onChange={(e) => setFormData({...formData, price: e.target.value})}
                     />
+                    <input 
+                        type="text" placeholder="Health Status (e.g. Healthy, Vaccinated)" 
+                        required className="p-2 bg-transparent border border-ez-gold/30 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-ez-gold"
+                        value={formData.health_status} onChange={(e) => setFormData({...formData, health_status: e.target.value})}
+                    />
                     <select 
                         className="p-2 bg-ez-dark border border-ez-gold/30 rounded-lg text-white focus:outline-none focus:border-ez-gold"
                         value={formData.category_id} onChange={(e) => setFormData({...formData, category_id: parseInt(e.target.value)})}
@@ -120,7 +126,7 @@ const ManageAnimals = () => {
                         <option value={3}>Dumba</option>
                         <option value={4}>Camel</option>
                     </select>
-                    <button type="submit" className="md:col-span-2 bg-ez-emerald text-ez-gold border border-ez-gold/30 hover:border-ez-gold rounded-lg font-bold transition-all">Save Animal</button>
+                    <button type="submit" className="md:col-span-1 bg-ez-emerald text-ez-gold border border-ez-gold/30 hover:border-ez-gold rounded-lg font-bold transition-all">Save Animal</button>
                 </form>
             )}
 

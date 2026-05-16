@@ -11,7 +11,9 @@ import {
     INSERT_ANIMAL,
     UPDATE_ANIMAL_STATUS,
     GET_ACTIVE_HISSA_ANIMAL,
-    GET_EMPTY_HISSA_ANIMAL
+    GET_EMPTY_HISSA_ANIMAL,
+    INSERT_HEALTH_RECORD,
+    INSERT_HISSA
 } from '../queries/animalQueries.js';
 
 // Get animals summary (count per category)
@@ -99,9 +101,18 @@ export const getActiveHissaAnimal = async (req, res) => {
 
 // Add a new animal (Admin only)
 export const addAnimal = async (req, res) => {
-    const { category_id, vendor_id, tag_no, weight, price, status } = req.body;
+    const { category_id, vendor_id, tag_no, weight, price, status, health_status } = req.body;
+    
+    if (!health_status) {
+        return res.status(400).json({ message: 'Health status is required' });
+    }
+
+    const client = await pool.connect();
     try {
-        const result = await pool.query(INSERT_ANIMAL, [
+        await client.query('BEGIN');
+        
+        // Insert Animal
+        const animalResult = await client.query(INSERT_ANIMAL, [
             category_id, 
             vendor_id, 
             tag_no, 
@@ -109,10 +120,27 @@ export const addAnimal = async (req, res) => {
             price, 
             status || 'available'
         ]);
-        res.status(201).json(result.rows[0]);
+        const animal_id = animalResult.rows[0].animal_id;
+
+        // Insert Health Record
+        await client.query(INSERT_HEALTH_RECORD, [animal_id, health_status]);
+
+        // Auto-generate Hissas for Cows (2) and Camels (4)
+        if (category_id === 2 || category_id === 4) {
+            const hissa_price = Math.ceil(price / 7);
+            for (let i = 1; i <= 7; i++) {
+                await client.query(INSERT_HISSA, [animal_id, i, hissa_price]);
+            }
+        }
+
+        await client.query('COMMIT');
+        res.status(201).json({ animal_id, message: 'Animal added successfully' });
     } catch (err) {
+        await client.query('ROLLBACK');
         console.error(err.message);
         res.status(500).json({ message: 'Server error' });
+    } finally {
+        client.release();
     }
 };
 

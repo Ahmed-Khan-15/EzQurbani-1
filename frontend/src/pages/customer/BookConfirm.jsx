@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { createBooking } from '../../api/bookingApi';
+import { createBooking, validateDiscount } from '../../api/bookingApi';
 import { CheckCircle, AlertCircle, ArrowLeft, Calendar, Truck, MapPin, Info } from 'lucide-react';
 
 const BookConfirm = () => {
@@ -15,14 +15,30 @@ const BookConfirm = () => {
     const [qurbaniDay, setQurbaniDay] = useState('');
     const [deliveryPref, setDeliveryPref] = useState('');
     const [address, setAddress] = useState('');
+    const [discountCode, setDiscountCode] = useState('');
+    const [discountInfo, setDiscountInfo] = useState(null);
+    const [discountError, setDiscountError] = useState('');
 
     if (!animal) {
         return <div className="p-8 text-center">Invalid selection. Please go back.</div>;
     }
 
-    const price = type === 'hissa' ? hissas.reduce((acc, h) => acc + parseFloat(h.price), 0) : parseFloat(animal.price);
+    const basePrice = type === 'hissa' ? hissas.reduce((acc, h) => acc + parseFloat(h.price), 0) : parseFloat(animal.price);
+    const finalPrice = discountInfo ? basePrice - (basePrice * (parseFloat(discountInfo.percentage) / 100)) : basePrice;
 
     const isFullAnimal = type === 'full';
+    
+    const handleApplyDiscount = async () => {
+        setDiscountError('');
+        setDiscountInfo(null);
+        if (!discountCode.trim()) return;
+        try {
+            const data = await validateDiscount(discountCode);
+            setDiscountInfo(data);
+        } catch (err) {
+            setDiscountError(err.response?.data?.message || 'Invalid discount code');
+        }
+    };
     
     const handleConfirm = async () => {
         setError('');
@@ -46,8 +62,9 @@ const BookConfirm = () => {
             await createBooking({
                 animal_id: animal.animal_id,
                 hissa_ids: hissas?.map(h => h.hissa_id) || [],
+                discount_id: discountInfo ? discountInfo.discount_id : null,
                 booking_type: type,
-                total_amount: price,
+                total_amount: finalPrice,
                 qurbani_day: isFullAnimal ? qurbaniDay : null,
                 delivery_preference: deliveryPref,
                 address_line: address
@@ -95,8 +112,39 @@ const BookConfirm = () => {
                         </div>
                         <div className="flex justify-between items-center pt-2">
                             <span className="text-xl font-bold text-ez-emerald font-serif">Total Price</span>
-                            <span className="text-3xl font-black text-ez-emerald">Rs. {price.toLocaleString()}</span>
+                            <div className="text-right">
+                                {discountInfo && (
+                                    <span className="text-sm line-through text-gray-400 mr-2">Rs. {basePrice.toLocaleString()}</span>
+                                )}
+                                <span className="text-3xl font-black text-ez-emerald">Rs. {finalPrice.toLocaleString()}</span>
+                            </div>
                         </div>
+                    </div>
+
+                    {/* Discount Section */}
+                    <div className="bg-white p-6 rounded-2xl border border-ez-gold/20 shadow-sm space-y-4">
+                        <h3 className="text-lg font-bold text-gray-900 font-serif border-b border-gray-100 pb-2">Promo Code</h3>
+                        <div className="flex gap-2">
+                            <input 
+                                type="text"
+                                placeholder="Enter discount code..."
+                                value={discountCode}
+                                onChange={(e) => setDiscountCode(e.target.value)}
+                                className="flex-1 p-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-ez-gold outline-none"
+                            />
+                            <button 
+                                onClick={handleApplyDiscount}
+                                className="px-6 bg-gray-900 text-ez-gold font-bold rounded-xl hover:bg-gray-800 transition"
+                            >
+                                Apply
+                            </button>
+                        </div>
+                        {discountError && <p className="text-red-500 text-sm font-medium">{discountError}</p>}
+                        {discountInfo && (
+                            <p className="text-green-600 text-sm font-bold bg-green-50 p-2 rounded border border-green-200 inline-block">
+                                ✅ Code Applied: {discountInfo.percentage}% off
+                            </p>
+                        )}
                     </div>
 
                     {/* Preferences Form */}

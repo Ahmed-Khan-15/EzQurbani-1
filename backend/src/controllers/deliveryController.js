@@ -60,7 +60,16 @@ export const trackDelivery = async (req, res) => {
         if (result.rows.length === 0) {
             return res.status(404).json({ message: 'No delivery info found for this booking' });
         }
-        res.json(result.rows[0]);
+        
+        let row = result.rows[0];
+        let overall_status = 'pending';
+        if (row.slaughter_status === 'completed') overall_status = 'slaughtered';
+        if (row.package_status) overall_status = 'packaged';
+        if (row.delivery_status === 'delivered') overall_status = 'delivered';
+        
+        row.status = overall_status;
+        
+        res.json(row);
     } catch (err) {
         console.error(err.message);
         res.status(500).json({ message: 'Server error' });

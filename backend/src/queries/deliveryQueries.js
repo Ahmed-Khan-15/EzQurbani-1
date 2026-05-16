@@ -8,12 +8,21 @@ export const INSERT_DELIVERY_ORDER = `
 `;
 
 export const TRACK_DELIVERY_BY_BOOKING = `
-    SELECT d.*, a.name as agent_name, ad.address_line
-    FROM DELIVERY_ORDER d
-    JOIN MEAT_PACKAGE mp ON d.package_id = mp.package_id
-    JOIN BOOKING b ON mp.booking_id = b.booking_id
+    SELECT 
+        b.booking_id, 
+        b.status as booking_status,
+        ss.status as slaughter_status,
+        mp.status as package_status,
+        d.status as delivery_status,
+        d.delivery_date,
+        a.name as agent_name,
+        ad.address_line
+    FROM BOOKING b
+    LEFT JOIN SLAUGHTER_SCHEDULE ss ON b.animal_id = ss.animal_id
+    LEFT JOIN MEAT_PACKAGE mp ON b.booking_id = mp.booking_id
+    LEFT JOIN DELIVERY_ORDER d ON mp.package_id = d.package_id
     LEFT JOIN DELIVERY_AGENT a ON d.agent_id = a.agent_id
-    LEFT JOIN ADDRESS ad ON d.address_id = ad.address_id
+    LEFT JOIN ADDRESS ad ON b.address_id = ad.address_id
     WHERE b.booking_id = $1 AND b.user_id = $2
 `;
 

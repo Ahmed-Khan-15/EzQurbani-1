@@ -71,3 +71,15 @@ export const GET_EMPTY_HISSA_ANIMAL = `
     ORDER BY a.animal_id ASC
     LIMIT 1
 `;
+
+export const INSERT_HEALTH_RECORD = `
+    INSERT INTO ANIMAL_HEALTH_RECORD (animal_id, health_status)
+    VALUES ($1, $2)
+    RETURNING record_id
+`;
+
+export const INSERT_HISSA = `
+    INSERT INTO HISSA (animal_id, hissa_no, price, status)
+    VALUES ($1, $2, $3, 'available')
+    RETURNING hissa_id
+`;

@@ -77,5 +77,12 @@ export const ADVANCED_REPORTS = {
             name AS full_name 
         FROM PERSON
         LIMIT 10
+    `,
+    DISCOUNTS_APPLIED: `
+        SELECT b.booking_id, b.total_amount, d.code, d.percentage
+        FROM BOOKING b
+        JOIN DISCOUNT d ON b.total_amount BETWEEN (d.percentage * 1000) AND (d.percentage * 100000)
+        WHERE b.status = 'confirmed'
+        LIMIT 10
     `
 };

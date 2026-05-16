@@ -15,6 +15,20 @@ import {
 } from '../queries/bookingQueries.js';
 import { createNotification } from './notificationController.js';
 
+export const validateDiscount = async (req, res) => {
+    const { code } = req.body;
+    try {
+        const result = await pool.query('SELECT * FROM DISCOUNT WHERE code = $1 AND expiry_date >= CURRENT_DATE', [code]);
+        if (result.rows.length === 0) {
+            return res.status(404).json({ message: 'Invalid or expired discount code' });
+        }
+        res.json(result.rows[0]);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error' });
+    }
+};
+
 // Create a new booking (Most Important Function)
 export const createBooking = async (req, res) => {
     const { animal_id, hissa_ids, discount_id, booking_type, total_amount, qurbani_day, delivery_preference, address_line, city_id } = req.body;
