@@ -220,7 +220,17 @@ const ManageDeliveries = () => {
                                 </div>
                                 <div className="text-sm space-y-2">
                                     <p className="text-gray-400"><strong className="text-gray-200">Customer:</strong> {b.customer_name}</p>
-                                    <p className="text-gray-400"><strong className="text-gray-200">Animal:</strong> {b.animal_category} ({b.tag_no})</p>
+                                    <p className="text-gray-400">
+                                        <strong className="text-gray-200">Animal:</strong> {b.animal_category} ({b.tag_no})
+                                        {b.booking_type === 'hissa' ? ` - Hissa #${b.hissa_no}` : ''}
+                                    </p>
+                                    <p className="text-gray-400">
+                                        <strong className="text-gray-200">Weight:</strong> {
+                                            b.booking_type === 'hissa' 
+                                                ? (parseFloat(b.animal_weight) / 7).toFixed(1) 
+                                                : parseFloat(b.animal_weight)
+                                        } KG
+                                    </p>
                                 </div>
                                 <button 
                                     onClick={() => {
@@ -353,7 +363,14 @@ const ManageDeliveries = () => {
                                             <span>{item.shift_start ? item.shift_start.substring(0,5) : ''} - {item.shift_end ? item.shift_end.substring(0,5) : ''}</span>
                                         </div>
                                     </td>
-                                    <td className="px-6 py-4 font-bold text-white text-lg">{item.package_weight} <span className="text-sm text-gray-500">KG</span></td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex flex-col">
+                                            <div className="font-bold text-white text-lg">{item.package_weight} <span className="text-sm text-gray-500">KG</span></div>
+                                            <span className="text-xs text-gray-500 font-semibold mt-0.5">
+                                                {item.customer_name} • {item.tag_no}{item.booking_type === 'hissa' ? ` (Hissa #${item.hissa_no})` : ' (Full)'}
+                                            </span>
+                                        </div>
+                                    </td>
                                     <td className="px-6 py-4"><StatusBadge status={item.status} /></td>
                                 </tr>
                             ))}

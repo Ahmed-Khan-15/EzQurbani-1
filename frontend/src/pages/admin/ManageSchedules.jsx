@@ -197,7 +197,11 @@ const ManageSchedules = () => {
                                 onChange={(e) => setFormData({...formData, animal_id: e.target.value})}
                             >
                                 <option value="">Choose booked animal...</option>
-                                {animals.map(a => <option key={a.animal_id} value={a.animal_id}>{a.tag_no} - {a.category_name} ({a.qurbani_day || '1st Day'})</option>)}
+                                {animals.map(a => (
+                                    <option key={a.animal_id} value={a.animal_id}>
+                                        {a.category_name} #{a.tag_no} {a.is_hissa_complete ? '(7/7 Hissa Complete)' : ''} ({a.qurbani_day || '1st Day'})
+                                    </option>
+                                ))}
                             </select>
                             
                             {formData.animal_id && formData.slaughter_date && (

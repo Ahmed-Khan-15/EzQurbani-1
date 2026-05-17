@@ -40,10 +40,14 @@ export const UPDATE_DELIVERY_STATUS = `
 
 export const GET_ALL_DELIVERIES = `
     SELECT d.*, a.name as agent_name, ad.address_line, mp.weight as package_weight,
-           ss.slaughter_date, ss.end_time as slaughter_end_time
+           ss.slaughter_date, ss.end_time as slaughter_end_time,
+           an.tag_no, h.hissa_no, b.booking_type, p.name as customer_name
     FROM DELIVERY_ORDER d
     JOIN MEAT_PACKAGE mp ON d.package_id = mp.package_id
     JOIN BOOKING b ON mp.booking_id = b.booking_id
+    JOIN PERSON p ON b.user_id = p.person_id
+    LEFT JOIN ANIMAL an ON b.animal_id = an.animal_id
+    LEFT JOIN HISSA h ON b.hissa_id = h.hissa_id
     LEFT JOIN SLAUGHTER_SCHEDULE ss ON b.animal_id = ss.animal_id
     LEFT JOIN DELIVERY_AGENT a ON d.agent_id = a.agent_id
     LEFT JOIN ADDRESS ad ON d.address_id = ad.address_id
@@ -56,11 +60,13 @@ export const GET_PENDING_BOOKINGS_FOR_DELIVERY = `
            b.booking_type, a.weight as animal_weight, b.qurbani_day,
            (SELECT address_id FROM ADDRESS WHERE user_id = b.user_id LIMIT 1) as address_id,
            ss.end_time as slaughter_end_time,
-           ss.status as slaughter_status
+           ss.status as slaughter_status,
+           h.hissa_no
     FROM BOOKING b
     JOIN PERSON p ON b.user_id = p.person_id
     LEFT JOIN ANIMAL a ON b.animal_id = a.animal_id
     LEFT JOIN ANIMAL_CATEGORY ac ON a.category_id = ac.category_id
+    LEFT JOIN HISSA h ON b.hissa_id = h.hissa_id
     LEFT JOIN SLAUGHTER_SCHEDULE ss ON a.animal_id = ss.animal_id
     WHERE b.status = 'confirmed' 
       AND NOT EXISTS (

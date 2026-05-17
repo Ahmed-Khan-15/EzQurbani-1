@@ -49,11 +49,24 @@ export const GET_ALL_HOUSES = `SELECT * FROM SLAUGHTER_HOUSE`;
 export const GET_ALL_BUTCHERS = `SELECT * FROM BUTCHER`;
 
 export const GET_BOOKED_ANIMALS_FOR_SCHEDULING = `
-    SELECT a.*, ac.name as category_name, MAX(b.qurbani_day) as qurbani_day
+    SELECT a.animal_id, a.tag_no, a.weight, a.price, a.status, ac.name as category_name, MAX(b.qurbani_day) as qurbani_day,
+           false as is_hissa_complete
     FROM ANIMAL a
     JOIN ANIMAL_CATEGORY ac ON a.category_id = ac.category_id
     JOIN BOOKING b ON a.animal_id = b.animal_id
     WHERE a.status = 'booked'
     GROUP BY a.animal_id, ac.name
-    ORDER BY a.animal_id
+
+    UNION ALL
+
+    SELECT a.animal_id, a.tag_no, a.weight, a.price, a.status, ac.name as category_name, MAX(b.qurbani_day) as qurbani_day,
+           true as is_hissa_complete
+    FROM ANIMAL a
+    JOIN ANIMAL_CATEGORY ac ON a.category_id = ac.category_id
+    JOIN BOOKING b ON a.animal_id = b.animal_id
+    WHERE a.status = 'available' AND LOWER(ac.name) IN ('cow', 'camel')
+      AND (SELECT COUNT(*) FROM HISSA h WHERE h.animal_id = a.animal_id AND h.status = 'booked') = 7
+    GROUP BY a.animal_id, ac.name
+    ORDER BY animal_id
 `;
+

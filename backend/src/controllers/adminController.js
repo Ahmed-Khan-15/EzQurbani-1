@@ -224,6 +224,33 @@ export const getAllButchers = async (req, res) => {
 export const getBookedAnimals = async (req, res) => {
     try {
         const result = await pool.query(GET_BOOKED_ANIMALS_FOR_SCHEDULING);
+
+        // Fetch Hissa counts for all available shared animals for debugging purposes
+        const debugHissaCounts = await pool.query(`
+            SELECT a.animal_id, a.tag_no, ac.name as category_name, COUNT(h.hissa_id) as booked_hissas
+            FROM ANIMAL a
+            LEFT JOIN HISSA h ON a.animal_id = h.animal_id AND h.status = 'booked'
+            JOIN ANIMAL_CATEGORY ac ON a.category_id = ac.category_id
+            WHERE a.status = 'available' AND LOWER(ac.name) IN ('cow', 'camel')
+            GROUP BY a.animal_id, ac.name
+            ORDER BY a.animal_id
+        `);
+
+        console.log('--- [Slaughter Scheduling] Active Hissa Status Check ---');
+        debugHissaCounts.rows.forEach(row => {
+            console.log(`[Hissa Debug] Animal ID: ${row.animal_id}, Tag No: ${row.tag_no}, Category: ${row.category_name}, Booked Hissas: ${row.booked_hissas}/7`);
+        });
+
+        console.log('--- [Slaughter Scheduling] Booked & Completed Animals Sent to UI ---');
+        result.rows.forEach(row => {
+            if (row.is_hissa_complete) {
+                console.log(`[UI List] Animal ID: ${row.animal_id}, Tag: ${row.tag_no}, Category: ${row.category_name}, Status: Hissa Complete (7/7 booked)`);
+            } else {
+                console.log(`[UI List] Animal ID: ${row.animal_id}, Tag: ${row.tag_no}, Category: ${row.category_name}, Status: Full Animal Booked`);
+            }
+        });
+        console.log('------------------------------------------------------------------');
+
         res.json(result.rows);
     } catch (err) {
         console.error(err.message);
